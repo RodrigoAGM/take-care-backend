@@ -1,0 +1,1 @@
+Add db config on file db.config.ts
