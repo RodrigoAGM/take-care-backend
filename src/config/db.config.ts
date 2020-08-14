@@ -1,1 +1,1 @@
-//Here you need to configure the credentials of database for development
+//Here you need to configure the credentials of database for developmen

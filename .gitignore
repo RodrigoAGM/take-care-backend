@@ -102,5 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
-/build
-/src/config/db.config.ts
+
+build/
+src/config
+/src/config
