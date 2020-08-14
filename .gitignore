@@ -104,5 +104,5 @@ dist
 .tern-port
 
 build/
-src/config
-/src/config
+
+/config/db.config.ts
