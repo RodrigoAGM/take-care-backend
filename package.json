@@ -1,0 +1,26 @@
+{
+  "name": "take-care-backend",
+  "version": "1.0.0",
+  "description": "Backend for take care app",
+  "main": "index.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "tsc && node ./build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodrigoAGM/take-care-backend.git"
+  },
+  "author": "RodrigoAGM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RodrigoAGM/take-care-backend/issues"
+  },
+  "homepage": "https://github.com/RodrigoAGM/take-care-backend#readme",
+  "dependencies": {
+    "@types/express": "^4.17.7",
+    "express": "^4.17.1",
+    "typescript": "^3.9.7"
+  }
+}
