@@ -1,4 +1,5 @@
 import express, {Application} from 'express'
+import * as users from './api/user.api'
 
 export class App{
 
@@ -18,6 +19,7 @@ export class App{
         this.app.get('/', function (req, res) {
             res.send('Hello World!');
         });
+        this.app.use('/users', users.default)
     }
 
     async listen(){

@@ -1,11 +1,11 @@
-import { Response } from "express";
+import { Result } from "../model/result";
 
 export default interface Base{
     
-    get(): Promise<Response>
-    add(): Promise<Response>
-    deleteAll(): Promise<Response>
-    delete(id:string): Promise<Response>
-    getById(id:string): Promise<Response>
-    update(id:string): Promise<Response>
+    get(): Promise<Result>
+    add(object: Object): Promise<Result>
+    deleteAll(): Promise<Result>
+    delete(id:string): Promise<Result>
+    getById(id:string): Promise<Result>
+    update(id:string): Promise<Result>
 }

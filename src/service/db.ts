@@ -1,4 +1,4 @@
-import {createPool} from 'mysql2';
+import {createPool} from 'mysql2/promise';
 import {dbConfig} from '../../config/db.config';
 
 export async function connect(){
@@ -10,8 +10,7 @@ export async function connect(){
             password: dbConfig.PASSWORD,
             database: dbConfig.DB
         })
-        return connection
-        
+        return connection        
     } catch (error) {
         console.log('Something went wrong trying to connect with database')
         throw error
