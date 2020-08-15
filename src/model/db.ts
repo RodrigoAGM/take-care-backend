@@ -1,19 +1,19 @@
-import * as mysql from "mysql";
+import {createPool} from 'mysql2';
 import {dbConfig} from '../../config/db.config';
 
-const connection = mysql.createConnection({
-    host: dbConfig.HOST,
-    user: dbConfig.USER,
-    password: dbConfig.PASSWORD,
-    database: dbConfig.DB
-});
+export async function connect(){
 
-
-export function ConnectDatabase(){
-    connection.connect( (error) =>{
-        if(error) throw error
-        console.log('Database connected')
-    })
-
-    return connection
+    try {
+        const connection = await createPool({
+            host: dbConfig.HOST,
+            user: dbConfig.USER,
+            password: dbConfig.PASSWORD,
+            database: dbConfig.DB
+        })
+        return connection
+        
+    } catch (error) {
+        console.log('Something went wrong trying to connect with database')
+        throw error
+    }
 }

@@ -1,10 +1,8 @@
-import express from 'express';
-const app: express.Application = express();
+import {App} from './app'
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+async function main(){
+    const app = new App(3000)
+    await app.listen();
+}
 
-app.listen(3000, function () {
-  console.log('Example app listening port 3000!');
-});
+main()
