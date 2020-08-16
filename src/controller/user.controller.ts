@@ -77,7 +77,7 @@ export async function handleDeleteUsersByUsername(req: Request, res: Response){
 export async function handleGetUsersByUsername(req: Request, res: Response){
     try {
         const username = req.params.username
-        const data = await users.deleteByUsername(username);
+        const data = await users.getByUsername(username);
         res.send(data)
     } catch (error) {
         res.status(500).send(error)
