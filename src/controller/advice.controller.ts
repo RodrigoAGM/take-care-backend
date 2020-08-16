@@ -64,7 +64,7 @@ export async function handleUpdateAdvices(req: Request, res: Response){
     }
 }
 
-export async function handleDeleteUsersByType(req: Request, res: Response){
+export async function handleDeleteAdvicesByType(req: Request, res: Response){
     try {
         const type = req.params.type
         const data = await advices.deleteByType(type)
@@ -74,7 +74,7 @@ export async function handleDeleteUsersByType(req: Request, res: Response){
     }
 }
 
-export async function handleGetUsersByType(req: Request, res: Response){
+export async function handleGetAdvicesByType(req: Request, res: Response){
     try {
         const type = req.params.type
         const data = await advices.getByType(type)
@@ -84,7 +84,7 @@ export async function handleGetUsersByType(req: Request, res: Response){
     }
 }
 
-export async function handleUpdateUsersByType(req: Request, res: Response){
+export async function handleUpdateAdvicesByType(req: Request, res: Response){
     try {
         const type = req.params.type
         const advice:Advice = req.body
