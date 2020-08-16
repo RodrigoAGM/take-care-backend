@@ -103,7 +103,7 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
         let data
 
         if (diagnostic.frequency_id != undefined || diagnostic.level_id != undefined || diagnostic.user_id != undefined) {
-            data = 'Cannot update foreing keys for diagnostic, only description or date.'
+            data = 'Cannot update foreign keys for diagnostic, only description or date.'
             res.status(202)
         }else{
             data = await diagnostics.update(id, diagnostic);
