@@ -100,7 +100,15 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
     try {
         const id = req.params.id
         const diagnostic: Diagnostic = req.body
-        const data = await diagnostics.update(id, diagnostic);
+        let data
+
+        if (diagnostic.frequency_id != undefined || diagnostic.level_id != undefined || diagnostic.user_id != undefined) {
+            data = 'Cannot update foreing keys for diagnostic, only description or date.'
+            res.status(202)
+        }else{
+            data = await diagnostics.update(id, diagnostic);
+        }
+
         res.send(data)
     } catch (error) {
         res.status(500).send(error)
