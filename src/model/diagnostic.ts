@@ -1,8 +1,8 @@
 export interface Diagnostic{
     id?: number,
-    user_id: string,
-    level_id: string,
-    frequency_id: string,
+    user_id: number,
+    level_id: number,
+    frequency_id: number,
     date: string,
     description?: string
 }

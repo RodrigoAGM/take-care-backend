@@ -1,8 +1,10 @@
 import { Frequencies } from "../service/frequency.service";
 import { Request, Response } from 'express'
 import { Frequency } from "../model/frequency";
+import { Diagnostics } from "../service/diagnostic.service";
 
 const frequencies = new Frequencies()
+const diagnostics = new Diagnostics()
 
 export async function handleGetFrequencies(req: Request, res: Response) {
     try {
@@ -27,6 +29,7 @@ export async function handleAddFrequencies(req: Request, res: Response){
 export async function handleDeleteAllFrequencies(req: Request, res: Response){
     try {
         const data = await frequencies.deleteAll();
+        await diagnostics.deleteAll()
         res.send(data)
     } catch (error) {
         res.status(500).send(error)
