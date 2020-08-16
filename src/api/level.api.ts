@@ -5,7 +5,8 @@ import {
     handleDeleteAllLevels,
     handleDeleteLevels,
     handleGetLevelsById,
-    handleUpdateLevels
+    handleUpdateLevels,
+    handleGetLevelsByFrequency
 } from '../controller/level.controller';
 
 const router = Router()
@@ -16,5 +17,6 @@ router.delete('/delete/all', handleDeleteAllLevels)
 router.delete('/delete/:id', handleDeleteLevels)
 router.get('/:id', handleGetLevelsById)
 router.put('/update/:id', handleUpdateLevels)
+router.get('/frequency/:frequency', handleGetLevelsByFrequency)
 
 export { router as levels }

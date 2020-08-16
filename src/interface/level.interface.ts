@@ -1,6 +1,6 @@
 import Base from "./base.interface";
-import { Response } from "express";
+import { Result } from "../model/result";
 
-export interface Levels extends Base{
-
+export interface Levels extends Base {
+    getByFrequencyValue(frequency: number): Promise<Result>
 }

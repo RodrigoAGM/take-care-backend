@@ -73,4 +73,15 @@ export class Levels implements LevelInterface {
             return Promise.reject({ success: false, error });
         }
     }
+
+    async getByFrequencyValue(frequency: number): Promise<Result> {
+        try {
+            const conn = await connect()
+            const res = await conn.query('SELECT * FROM levels WHERE min_frequency <= ? and max_frequency >= ? Limit 1', [frequency, frequency])
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
 }
