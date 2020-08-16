@@ -9,12 +9,13 @@ export interface ResultId {
     id: string;
 }
 
-//Interface used to parse result obtained from POST - create request
+//Interface used to parse result obtained from POST - create and PUT - update requests
 export interface ResultSetHeader {
     fieldCount: number,
     affectedRows: number,
     insertId: number,
     info: string,
     serverStatus: number,
-    warningStatus: number
+    warningStatus: number,
+    changedRows?: number,
 }

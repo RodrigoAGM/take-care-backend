@@ -5,6 +5,7 @@ import { Frequency } from "../model/frequency";
 import { Frequencies } from "../service/frequency.service";
 import { Levels } from "../service/level.service";
 import { Level } from "../model/level";
+import { ResultSetHeader } from "../model/result";
 
 const diagnostics = new Diagnostics()
 const frequencies = new Frequencies()
@@ -12,7 +13,28 @@ const levels = new Levels()
 
 export async function handleGetDiagnostics(req: Request, res: Response) {
     try {
-        const data = await diagnostics.get()
+        let data = await diagnostics.get()
+        //Handle get objects 
+        let diagnosticsList: Diagnostic[] = data.data as Diagnostic[]
+
+        for (let index = 0; index < diagnosticsList.length; index++) {
+            let level = await levels.getById(diagnosticsList[index].level_id.toString())
+            let frequency = await frequencies.getById(diagnosticsList[index].frequency_id.toString())
+
+            let levelObj = level.data as [Level]
+            let frequencyObj = frequency.data as [Frequency]
+
+            if (levelObj[0] != undefined && frequencyObj[0] != undefined) {
+                delete diagnosticsList[index].frequency_id
+                delete diagnosticsList[index].level_id
+                diagnosticsList[index].level = levelObj[0]
+                diagnosticsList[index].frequency = frequencyObj[0]
+            }
+            else {
+                res.status(206)
+            }
+        }
+
         res.send(data)
     } catch (error) {
         console.error(error)
@@ -44,8 +66,11 @@ export async function handleAddDiagnostics(req: Request, res: Response) {
             data = await diagnostics.add(diagnostic);
 
         } else {
-            data = 'No level is defined for this heart rate'
-            res.status(202)
+            data = {
+                success: false,
+                data: 'No level is defined for this heart rate, define a level for this heart rate before creating diagnostic'
+            }
+            res.status(400)
         }
 
         res.send(data)
@@ -77,7 +102,7 @@ export async function handleDeleteDiagnostics(req: Request, res: Response) {
             data = await diagnostics.delete(id);
         } else {
             data = 'No Diagnostic found with this id.'
-            res.status(202)
+            res.status(206)
         }
 
         res.send(data)
@@ -89,7 +114,37 @@ export async function handleDeleteDiagnostics(req: Request, res: Response) {
 export async function handleGetDiagnosticsById(req: Request, res: Response) {
     try {
         const id = req.params.id
-        const data = await diagnostics.getById(id);
+        let data = await diagnostics.getById(id);
+
+        //Handle get objects 
+        let diagnosticsObj = data.data as [Diagnostic][0]
+
+        if (diagnosticsObj == undefined) {
+
+            res.status(204)
+            data = {
+                success: false,
+                data: 'No diagnostic found with the specified id'
+            }
+
+        } else {
+            let level = await levels.getById(diagnosticsObj.level_id.toString())
+            let frequency = await frequencies.getById(diagnosticsObj.frequency_id.toString())
+
+            let levelObj = level.data as [Level]
+            let frequencyObj = frequency.data as [Frequency]
+
+            if (levelObj[0] != undefined && frequencyObj[0] != undefined) {
+                delete diagnosticsObj.frequency_id
+                delete diagnosticsObj.level_id
+                diagnosticsObj.level = levelObj[0]
+                diagnosticsObj.frequency = frequencyObj[0]
+            }
+            else {
+                res.status(206)
+            }
+        }
+
         res.send(data)
     } catch (error) {
         res.status(500).send(error)
@@ -103,10 +158,22 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
         let data
 
         if (diagnostic.frequency_id != undefined || diagnostic.level_id != undefined || diagnostic.user_id != undefined) {
-            data = 'Cannot update foreign keys for diagnostic, only description or date.'
-            res.status(202)
-        }else{
+            data = {
+                success: false,
+                data: 'Cannot update foreign keys for diagnostic, only description or date.'
+            }
+            res.status(400)
+        } else {
             data = await diagnostics.update(id, diagnostic);
+            const info = data.data as ResultSetHeader
+            console.log(info.changedRows)
+            if (!info.changedRows && info.changedRows == 0) {
+                data = {
+                    success: false,
+                    data: 'Something went wrong, diagnostic not updated'
+                }
+                res.status(400)
+            }
         }
 
         res.send(data)
