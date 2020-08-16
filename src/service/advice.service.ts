@@ -1,6 +1,6 @@
 import { Advices as AdviceInterface } from "../interface/advice.interface";
 import { Advice } from "../model/advice";
-import { connect } from './db'
+import { MySql } from './db'
 import { Result, ResultId } from "../model/result";
 import { ResultSetHeader } from "mysql2";
 
@@ -9,8 +9,8 @@ export class Advices implements AdviceInterface {
     async get(): Promise<Result> {
 
         try {
-            const conn = await connect()
-            const res = await conn.query('SELECT * FROM advices')
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('SELECT * FROM advices')
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
             console.error(error)
@@ -20,8 +20,8 @@ export class Advices implements AdviceInterface {
 
     async add(advice: Advice): Promise<ResultId> {
         try {
-            const conn = await connect()
-            const res = await conn.query('INSERT INTO advices SET ?', [advice])
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('INSERT INTO advices SET ?', [advice])
             const parsedRes: ResultSetHeader = res[0] as ResultSetHeader
             return Promise.resolve({ success: true, data: advice, id: parsedRes.insertId.toString() })
         } catch (error) {
@@ -32,8 +32,8 @@ export class Advices implements AdviceInterface {
 
     async deleteAll(): Promise<Result> {
         try {
-            const conn = await connect()
-            await conn.query('DELETE FROM advices')
+            const mysql = MySql.getConnection()
+            await mysql.conn.query('DELETE FROM advices')
             return Promise.resolve({ success: true, data: undefined })
         } catch (error) {
             console.error(error)
@@ -43,8 +43,8 @@ export class Advices implements AdviceInterface {
 
     async delete(id: string): Promise<Result> {
         try {
-            const conn = await connect()
-            await conn.query('DELETE FROM advices WHERE id = ?', id)
+            const mysql = MySql.getConnection()
+            await mysql.conn.query('DELETE FROM advices WHERE id = ?', id)
             return Promise.resolve({ success: true, data: undefined })
         } catch (error) {
             console.error(error)
@@ -54,8 +54,8 @@ export class Advices implements AdviceInterface {
 
     async update(id: string, advice: Advice): Promise<Result> {
         try {
-            const conn = await connect()
-            const res = await conn.query('UPDATE advices set ? WHERE id = ?', [advice, id])
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('UPDATE advices set ? WHERE id = ?', [advice, id])
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
             console.error(error)
@@ -65,8 +65,8 @@ export class Advices implements AdviceInterface {
 
     async getById(id: string): Promise<Result> {
         try {
-            const conn = await connect()
-            const res = await conn.query('SELECT * FROM advices WHERE id = ?', id)
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('SELECT * FROM advices WHERE id = ?', id)
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
             console.error(error)
@@ -76,8 +76,8 @@ export class Advices implements AdviceInterface {
 
     async deleteByType(type: string): Promise<Result> {
         try {
-            const conn = await connect()
-            await conn.query('DELETE FROM advices WHERE type = ?', type)
+            const mysql = MySql.getConnection()
+            await mysql.conn.query('DELETE FROM advices WHERE type = ?', type)
             return Promise.resolve({ success: true, data: undefined })
         } catch (error) {
             console.error(error)
@@ -87,8 +87,8 @@ export class Advices implements AdviceInterface {
 
     async getByType(type: string): Promise<Result> {
         try {
-            const conn = await connect()
-            const res = await conn.query('SELECT * FROM advices WHERE type = ?', type)
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('SELECT * FROM advices WHERE type = ?', type)
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
             console.error(error)
