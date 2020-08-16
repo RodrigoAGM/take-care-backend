@@ -115,9 +115,10 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
     try {
         const id = req.params.id
         let data = await diagnostics.getById(id);
-
+        console.log(data)
         //Handle get objects 
-        let diagnosticsObj = data.data as [Diagnostic][0]
+        let diagnosticsObj = data.data as [Diagnostic]
+        console.log(diagnosticsObj)
 
         if (diagnosticsObj == undefined) {
 
@@ -128,17 +129,17 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
             }
 
         } else {
-            let level = await levels.getById(diagnosticsObj.level_id.toString())
-            let frequency = await frequencies.getById(diagnosticsObj.frequency_id.toString())
+            let level = await levels.getById(diagnosticsObj[0].level_id.toString())
+            let frequency = await frequencies.getById(diagnosticsObj[0].frequency_id.toString())
 
             let levelObj = level.data as [Level]
             let frequencyObj = frequency.data as [Frequency]
 
             if (levelObj[0] != undefined && frequencyObj[0] != undefined) {
-                delete diagnosticsObj.frequency_id
-                delete diagnosticsObj.level_id
-                diagnosticsObj.level = levelObj[0]
-                diagnosticsObj.frequency = frequencyObj[0]
+                delete diagnosticsObj[0].frequency_id
+                delete diagnosticsObj[0].level_id
+                diagnosticsObj[0].level = levelObj[0]
+                diagnosticsObj[0].frequency = frequencyObj[0]
             }
             else {
                 res.status(206)
@@ -147,6 +148,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
 
         res.send(data)
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 }
