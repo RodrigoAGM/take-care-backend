@@ -3,6 +3,7 @@ import { users } from './api/user.api'
 import { levels } from './api/level.api'
 import { json } from 'body-parser'
 import { frequencies } from './api/frequency.api'
+import { advices } from './api/advice.api'
 
 export class App {
 
@@ -25,6 +26,7 @@ export class App {
         this.app.use('/users', json(), users)
         this.app.use('/levels', json(), levels)
         this.app.use('/frequencies', json(), frequencies)
+        this.app.use('/advices', json(), advices)
     }
 
     async listen() {
