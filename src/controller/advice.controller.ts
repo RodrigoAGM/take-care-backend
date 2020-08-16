@@ -83,14 +83,3 @@ export async function handleGetAdvicesByType(req: Request, res: Response){
         res.status(500).send(error)
     }
 }
-
-export async function handleUpdateAdvicesByType(req: Request, res: Response){
-    try {
-        const type = req.params.type
-        const advice:Advice = req.body
-        const data = await advices.updateByType(type, advice)
-        res.send(data)
-    } catch (error) {
-        res.status(500).send(error)
-    }
-}
