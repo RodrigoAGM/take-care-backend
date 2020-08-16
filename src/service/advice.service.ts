@@ -73,4 +73,37 @@ export class Advices implements AdviceInterface {
             return Promise.reject({ success: false, error });
         }
     }
+
+    async deleteByType(type: string): Promise<Result> {
+        try {
+            const conn = await connect()
+            await conn.query('DELETE FROM advices WHERE type = ?', type)
+            return Promise.resolve({ success: true, data: undefined })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
+
+    async getByType(type: string): Promise<Result> {
+        try {
+            const conn = await connect()
+            const res = await conn.query('SELECT * FROM advices WHERE type = ?', type)
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
+
+    async updateByType(type: string, advice: Advice): Promise<Result> {
+        try {
+            const conn = await connect()
+            const res = await conn.query('UPDATE advices set ? WHERE type = ?', [user, type])
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
 }
