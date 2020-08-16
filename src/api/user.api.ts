@@ -1,8 +1,9 @@
 import {Router} from 'express'
-import { handleGetUsers } from '../controller/user.controller';
+import { handleGetUsers, handleAddUsers } from '../controller/user.controller';
 
 const router = Router();
 
-router.get("/fetch", handleGetUsers);
+router.get('/', handleGetUsers);
+router.post('/add', handleAddUsers)
 
 export default router

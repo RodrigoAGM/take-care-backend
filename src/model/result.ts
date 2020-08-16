@@ -8,3 +8,13 @@ export interface ResultId {
     data: {} | undefined;
     id: string;
 }
+
+//Interface used to parse result obtained from POST - create request
+export interface ResultSetHeader {
+    fieldCount: number,
+    affectedRows: number,
+    insertId: number,
+    info: string,
+    serverStatus: number,
+    warningStatus: number
+}

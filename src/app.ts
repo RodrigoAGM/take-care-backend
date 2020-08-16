@@ -1,5 +1,6 @@
 import express, {Application} from 'express'
 import * as users from './api/user.api'
+import {json} from 'body-parser' 
 
 export class App{
 
@@ -16,10 +17,10 @@ export class App{
     }
 
     routes(){
-        this.app.get('/', function (req, res) {
+        this.app.get('/', json(), function (req, res) {
             res.send('Hello World!');
         });
-        this.app.use('/users', users.default)
+        this.app.use('/users', json(), users.default)
     }
 
     async listen(){
