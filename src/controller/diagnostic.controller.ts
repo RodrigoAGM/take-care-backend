@@ -25,8 +25,6 @@ export async function handleAddDiagnostics(req: Request, res: Response) {
         const { user_id, frequency, date, description } = req.body
 
         const frequencyObj: Frequency = frequency
-        const frequencyRes = await frequencies.add(frequency)
-
         const levelRes = await levels.getByFrequencyValue(frequencyObj.heart_rate)
         const levelObj = levelRes.data as [Level]
 
@@ -34,6 +32,8 @@ export async function handleAddDiagnostics(req: Request, res: Response) {
         let data
 
         if (levelObj[0] != undefined) {
+            const frequencyRes = await frequencies.add(frequency)
+
             diagnostic = {
                 date: date,
                 description: description,
@@ -73,7 +73,7 @@ export async function handleDeleteDiagnostics(req: Request, res: Response) {
         const diagnostic = diagnosticRes.data as [Diagnostic]
         let data
         if (diagnostic[0] != undefined) {
-            await frequencies.getById(diagnostic[0].frequency_id.toString())
+            await frequencies.delete(diagnostic[0].frequency_id.toString())
             data = await diagnostics.delete(id);
         } else {
             data = 'No Diagnostic found with this id.'
