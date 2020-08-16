@@ -1,13 +1,15 @@
-import {Router} from 'express'
-import { handleGetUsers, 
-    handleAddUsers, 
-    handleDeleteAllUsers, 
-    handleDeleteUsers, 
-    handleGetUsersById, 
-    handleUpdateUsersByUsername, 
-    handleUpdateUsers, 
-    handleGetUsersByUsername, 
-    handleDeleteUsersByUsername } from '../controller/user.controller';
+import { Router } from 'express'
+import {
+    handleGetUsers,
+    handleAddUsers,
+    handleDeleteAllUsers,
+    handleDeleteUsers,
+    handleGetUsersById,
+    handleUpdateUsersByUsername,
+    handleUpdateUsers,
+    handleGetUsersByUsername,
+    handleDeleteUsersByUsername
+} from '../controller/user.controller';
 
 const router = Router()
 
@@ -21,4 +23,4 @@ router.delete('/delete/username/:username', handleDeleteUsersByUsername)
 router.get('/username/:username', handleGetUsersByUsername)
 router.put('/update/username/:username', handleUpdateUsersByUsername)
 
-export default router
+export { router as users }
