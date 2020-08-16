@@ -19,6 +19,6 @@ router.delete('/delete/:id', handleDeleteAdvices)
 router.get('/:id', handleGetAdvicesById)
 router.put('/update/:id', handleUpdateAdvices)
 router.delete('/delete/type/:type', handleDeleteAdvicesByType)
-router.get('/username/:type', handleGetAdvicesByType)
+router.get('/type/:type', handleGetAdvicesByType)
 
 export { router as advices }
