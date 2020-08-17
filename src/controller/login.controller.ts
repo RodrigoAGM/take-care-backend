@@ -6,6 +6,7 @@ import * as jwt from 'jsonwebtoken'
 import * as bcrypt from 'bcrypt'
 import { Tokens } from '../service/token.service'
 import { Token } from '../model/token'
+import { Payload } from '../model/request'
 
 const users = new Users()
 const tokens = new Tokens()
@@ -87,6 +88,53 @@ export async function handleLogout(req: Request, res: Response) {
 
 
 
-export async function refreshToken(req: Request, res: Response) {
-    
+export async function handleRefreshToken(req: Request, res: Response) {
+
+    try {
+        let { token } = req.body
+        token = token && token?.split(' ')[1]
+
+        let data
+        if(token != undefined && process.env.REFRESH_TOKEN_SECRET != undefined){
+
+            await jwt.verify(token, process.env.REFRESH_TOKEN_SECRET)
+            const decoded = await jwt.decode(token, {complete:true}) as {[key:string]:any}
+            const payload = decoded.payload as Payload
+
+            const tokenRes = await tokens.getByUserId(payload.id.toString())
+            const userToken = tokenRes.data as [Token]
+
+            if(userToken[0] != undefined && userToken[0].token == token){
+                
+                const accessToken = createAccessToken({
+                    id: payload.id,
+                    username: payload.username,
+                    mail: payload.mail
+                })
+                
+                data = {
+                    success: true,
+                    accessToken : accessToken
+                }
+            }else{
+                res.send(403)
+                data = {
+                    success: false,
+                    message: 'Invalid refresh token sent for user.'
+                }
+            }
+
+        }else{
+            res.send(401)
+            data = {
+                success: false,
+                message: 'No token found request body.'
+            }
+        }
+
+        res.send(data)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Invalid refresh token sent for user.')
+    }
 }
