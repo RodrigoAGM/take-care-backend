@@ -21,8 +21,8 @@ export class Users implements UserInterface {
     async add(user: User): Promise<ResultId> {
         try {
             const mysql = MySql.getConnection()
+            console.log(user)
             user.password = bcrypt.hashSync(user.password, 10)
-            user.rol_id = Roles.USER
             const res = await mysql.conn.query('INSERT INTO users SET ?', [user])
             const parsedRes: ResultSetHeader = res[0] as ResultSetHeader
             return Promise.resolve({ success: true, data: user, id: parsedRes.insertId.toString() })

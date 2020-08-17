@@ -1,6 +1,7 @@
 import {config as envConfig} from 'dotenv'
 import express, { Application } from 'express'
 import { users } from './api/user.api'
+import { users as adminUsers } from './api/user.admin.api'
 import { levels } from './api/level.api'
 import { json } from 'body-parser'
 import { frequencies } from './api/frequency.api'
@@ -29,6 +30,7 @@ export class App {
             res.send('Hello World!');
         });
         this.app.use('/users', json(), users)
+        this.app.use('/admin/users', json(), adminUsers)
         this.app.use('/levels', json(), levels)
         this.app.use('/frequencies', json(), frequencies)
         this.app.use('/advices', json(), advices)
