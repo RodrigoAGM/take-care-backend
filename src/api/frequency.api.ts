@@ -6,12 +6,17 @@ import {
     handleGetFrequenciesById,
     handleUpdateFrequencies
 } from '../controller/frequency.controller';
+import { authenticateToken } from '../middleware/jwt.middleware';
 
 const router = Router()
 
-router.get('/', handleGetFrequencies)
-router.delete('/delete/all', handleDeleteAllFrequencies)
-router.get('/:id', handleGetFrequenciesById)
-router.put('/update/:id', handleUpdateFrequencies)
+//Admin only routes
+router.get('/', authenticateToken, handleGetFrequencies)
+router.delete('/delete/all', authenticateToken, handleDeleteAllFrequencies)
+router.get('/:id', authenticateToken, handleGetFrequenciesById)
+router.put('/update/:id', authenticateToken, handleUpdateFrequencies)
+
+//User routes
+
 
 export { router as frequencies }

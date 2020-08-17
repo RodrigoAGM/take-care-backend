@@ -131,3 +131,19 @@ export async function handleUpdateUsersByUsername(req: Request, res: Response){
         res.status(500).send(error)
     }
 }
+
+export async function handleRegisterUsers(req: Request, res: Response){
+    try {
+        const user:User = req.body
+        const data = await users.add(user);
+
+        //Handle hide password
+        let usersObj : User = data.data as User
+        delete usersObj.password
+        delete usersObj.rol_id
+
+        res.send(data)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}

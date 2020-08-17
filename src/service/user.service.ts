@@ -1,5 +1,5 @@
 import { Users as UserInterface } from "../interface/user.interface";
-import { User } from "../model/user";
+import { User, Roles } from "../model/user";
 import { MySql } from './db'
 import { Result, ResultId, ResultSetHeader } from "../model/result";
 import * as bcrypt from 'bcrypt'
@@ -22,6 +22,7 @@ export class Users implements UserInterface {
         try {
             const mysql = MySql.getConnection()
             user.password = bcrypt.hashSync(user.password, 10)
+            user.rol_id = Roles.USER
             const res = await mysql.conn.query('INSERT INTO users SET ?', [user])
             const parsedRes: ResultSetHeader = res[0] as ResultSetHeader
             return Promise.resolve({ success: true, data: user, id: parsedRes.insertId.toString() })
@@ -107,6 +108,21 @@ export class Users implements UserInterface {
             const mysql = MySql.getConnection()
             const res = await mysql.conn.query('UPDATE users set ? WHERE username = ?', [user, username])
             return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
+
+
+    async register(user: User): Promise<ResultId> {
+        try {
+            const mysql = MySql.getConnection()
+            user.password = bcrypt.hashSync(user.password, 10)
+            user.rol_id = Roles.USER
+            const res = await mysql.conn.query('INSERT INTO users SET ?', [user])
+            const parsedRes: ResultSetHeader = res[0] as ResultSetHeader
+            return Promise.resolve({ success: true, data: user, id: parsedRes.insertId.toString() })
         } catch (error) {
             console.error(error)
             return Promise.reject({ success: false, error });

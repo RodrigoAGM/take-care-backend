@@ -9,16 +9,21 @@ import {
     handleDeleteAdvicesByType,
     handleGetAdvicesByType,
 } from '../controller/advice.controller';
+import { authenticateToken } from '../middleware/jwt.middleware';
 
 const router = Router()
 
-router.get('/', handleGetAdvices)
-router.post('/add', handleAddAdvices)
-router.delete('/delete/all', handleDeleteAllAdvices)
-router.delete('/delete/:id', handleDeleteAdvices)
-router.get('/:id', handleGetAdvicesById)
-router.put('/update/:id', handleUpdateAdvices)
-router.delete('/delete/type/:type', handleDeleteAdvicesByType)
-router.get('/type/:type', handleGetAdvicesByType)
+
+//Admin only routes
+router.get('/', authenticateToken, handleGetAdvices)
+router.post('/add', authenticateToken, handleAddAdvices)
+router.delete('/delete/all', authenticateToken, handleDeleteAllAdvices)
+router.delete('/delete/:id', authenticateToken, handleDeleteAdvices)
+router.get('/:id', authenticateToken, handleGetAdvicesById)
+router.put('/update/:id', authenticateToken, handleUpdateAdvices)
+router.delete('/delete/type/:type', authenticateToken, handleDeleteAdvicesByType)
+
+//User routes
+router.get('/type/:type', authenticateToken, handleGetAdvicesByType)
 
 export { router as advices }

@@ -8,6 +8,7 @@ import { authenticateToken } from '../middleware/jwt.middleware';
 
 const router = Router()
 
+//User routes
 router.post('/login', handleLogin)
 router.post('/refresh', handleRefreshToken)
 router.post('/logout', authenticateToken, handleLogout)

@@ -29,13 +29,15 @@ export async function handleLogin(req: Request, res: Response) {
 
         if (user[0] != undefined && bcrypt.compareSync(password, user[0].password)) {
 
-            delete user[0].password
-
             const tokenUser = {
                 id: user[0].id,
                 username: user[0].username,
-                mail: user[0].mail
+                mail: user[0].mail,
+                role: user[0].rol_id
             }
+
+            delete user[0].password
+            delete user[0].rol_id
 
             //Handle delete user password for response
             if (process.env.REFRESH_TOKEN_SECRET != undefined &&tokenUser.id != undefined) {
@@ -133,7 +135,8 @@ export async function handleRefreshToken(req: Request, res: Response) {
                 const accessToken = createAccessToken({
                     id: payload.id,
                     username: payload.username,
-                    mail: payload.mail
+                    mail: payload.mail,
+                    role: payload.role
                 })
                 
                 data = {
