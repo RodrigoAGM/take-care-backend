@@ -89,13 +89,19 @@ export async function handleLogin(req: Request, res: Response) {
 export async function handleLogout(req: Request, res: Response) {
     try {
         const tokenReq = req as TokenRequest
-        const data = await tokens.deleteByUserId(tokenReq.user.id.toString())
+        const deleteRes = await tokens.deleteByUserId(tokenReq.user.id.toString())
+        let data 
 
-        const info = data.data as ResultSetHeader
+        const info = deleteRes.data as ResultSetHeader
 
-        if (!info.changedRows && info.changedRows == 0) {
-            
+        if (info.affectedRows == 0) {
+            data = {
+                success: false,
+                error: 'User already logged out'
+            }
             res.status(400)
+        }else{
+            data = deleteRes
         }
 
         res.send(data)
