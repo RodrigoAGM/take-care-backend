@@ -168,7 +168,7 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
         } else {
             data = await diagnostics.update(id, diagnostic);
             const info = data.data as ResultSetHeader
-            console.log(info.changedRows)
+
             if (!info.changedRows && info.changedRows == 0) {
                 data = {
                     success: false,

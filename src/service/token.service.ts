@@ -30,10 +30,10 @@ export class Tokens implements TokenInterface {
         }
     }
 
-    async update(id: string, token: Token): Promise<Result> {
+    async update(user_id: string, token: Token): Promise<Result> {
         try {
             const mysql = MySql.getConnection()
-            const res = await mysql.conn.query('UPDATE tokens set ? WHERE id = ?', [token, id])
+            const res = await mysql.conn.query('UPDATE tokens set ? WHERE user_id = ?', [token, user_id])
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
             console.error(error)
@@ -55,6 +55,7 @@ export class Tokens implements TokenInterface {
     async getByUserId(user_id: string): Promise<Result> {
         try {
             const mysql = MySql.getConnection()
+            console.log(user_id)
             const res = await mysql.conn.query('SELECT * FROM tokens WHERE user_id = ?', user_id)
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {

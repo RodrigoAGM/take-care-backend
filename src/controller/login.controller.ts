@@ -41,11 +41,20 @@ export async function handleLogin(req: Request, res: Response) {
                 const accessToken = createAccessToken(tokenUser)
                 const refreshToken = jwt.sign(tokenUser, process.env.REFRESH_TOKEN_SECRET)
 
+                //Handle login with existing refresh token on database
+                const tokenRes = await tokens.getByUserId(tokenUser.id.toString())
+                const tokenObj = tokenRes.data as [Token]
+
                 const refreshTokenObj:Token = {
                     token: refreshToken,
                     user_id: tokenUser.id
                 }
-                await tokens.add(refreshTokenObj)
+
+                if(tokenObj[0] != undefined){
+                    await tokens.update(tokenUser.id.toString(), refreshTokenObj)
+                }else{
+                    await tokens.add(refreshTokenObj)
+                }
 
                 data = {
                     success: true,

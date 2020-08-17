@@ -1,8 +1,7 @@
 import { Diagnostics as DiagnosticInterface } from "../interface/diagnostic.interface";
 import { Diagnostic } from "../model/diagnostic";
 import { MySql } from './db'
-import { Result, ResultId } from "../model/result";
-import { ResultSetHeader } from "mysql2";
+import { Result, ResultId, ResultSetHeader} from "../model/result";
 
 export class Diagnostics implements DiagnosticInterface {
 
