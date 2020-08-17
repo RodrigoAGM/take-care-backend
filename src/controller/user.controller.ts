@@ -1,13 +1,13 @@
 import { Users } from "../service/user.service";
 import { Request, Response } from 'express'
 import { User } from "../model/user";
+import { TokenRequest } from "../model/request";
 
 const users = new Users()
 
 export async function handleGetUsers(req: Request, res: Response) {
     try {
         const data = await users.get()
-
         //Handle hide password
         let usersList : User[] = data.data as User[]
         

@@ -57,6 +57,11 @@ export class Users implements UserInterface {
     async update(id: string, user: User): Promise<Result> {
         try {
             const mysql = MySql.getConnection()
+
+            if(user.password != undefined){
+                user.password = bcrypt.hashSync(user.password, 10)
+            }
+            
             const res = await mysql.conn.query('UPDATE users set ? WHERE id = ?', [user, id])
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
