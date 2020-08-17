@@ -1,8 +1,7 @@
 import { Advices as AdviceInterface } from "../interface/advice.interface";
 import { Advice } from "../model/advice";
 import { MySql } from './db'
-import { Result, ResultId } from "../model/result";
-import { ResultSetHeader } from "mysql2";
+import { Result, ResultId, ResultSetHeader } from "../model/result";
 
 export class Advices implements AdviceInterface {
 

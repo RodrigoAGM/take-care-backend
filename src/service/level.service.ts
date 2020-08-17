@@ -1,8 +1,7 @@
 import { Levels as LevelInterface } from "../interface/level.interface";
 import { Level } from "../model/level";
 import { MySql } from './db'
-import { Result, ResultId } from "../model/result";
-import { ResultSetHeader } from "mysql2";
+import { Result, ResultId, ResultSetHeader } from "../model/result";
 
 export class Levels implements LevelInterface {
 

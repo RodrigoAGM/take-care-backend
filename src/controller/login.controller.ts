@@ -6,7 +6,8 @@ import * as jwt from 'jsonwebtoken'
 import * as bcrypt from 'bcrypt'
 import { Tokens } from '../service/token.service'
 import { Token } from '../model/token'
-import { Payload } from '../model/request'
+import { Payload, TokenRequest } from '../model/request'
+import { ResultSetHeader } from '../model/result'
 
 const users = new Users()
 const tokens = new Tokens()
@@ -87,14 +88,22 @@ export async function handleLogin(req: Request, res: Response) {
 
 export async function handleLogout(req: Request, res: Response) {
     try {
-        //const data = await levels.get()
-        //res.send(data)
+        const tokenReq = req as TokenRequest
+        const data = await tokens.deleteByUserId(tokenReq.user.id.toString())
+
+        const info = data.data as ResultSetHeader
+
+        if (!info.changedRows && info.changedRows == 0) {
+            
+            res.status(400)
+        }
+
+        res.send(data)
     } catch (error) {
         console.error(error)
         res.status(500).send(error)
     }
 }
-
 
 
 export async function handleRefreshToken(req: Request, res: Response) {

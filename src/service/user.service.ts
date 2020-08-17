@@ -1,8 +1,7 @@
 import { Users as UserInterface } from "../interface/user.interface";
 import { User } from "../model/user";
 import { MySql } from './db'
-import { Result, ResultId } from "../model/result";
-import { ResultSetHeader } from "mysql2";
+import { Result, ResultId, ResultSetHeader } from "../model/result";
 import * as bcrypt from 'bcrypt'
 
 export class Users implements UserInterface {

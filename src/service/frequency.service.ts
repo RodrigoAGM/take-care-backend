@@ -1,8 +1,7 @@
 import { Frequencies as FrequencyInterface } from "../interface/frequency.interface";
 import { Frequency } from "../model/frequency";
 import { MySql } from './db'
-import { Result, ResultId } from "../model/result";
-import { ResultSetHeader } from "mysql2";
+import { Result, ResultId, ResultSetHeader} from "../model/result";
 
 export class Frequencies implements FrequencyInterface {
 

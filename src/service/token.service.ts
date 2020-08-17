@@ -1,8 +1,7 @@
 import { Tokens as TokenInterface } from "../interface/token.interface";
 import { Token } from "../model/token";
 import { MySql } from './db'
-import { Result, ResultId } from "../model/result";
-import { ResultSetHeader } from "mysql2";
+import { Result, ResultId, ResultSetHeader } from "../model/result";
 
 export class Tokens implements TokenInterface {
 
@@ -55,8 +54,18 @@ export class Tokens implements TokenInterface {
     async getByUserId(user_id: string): Promise<Result> {
         try {
             const mysql = MySql.getConnection()
-            console.log(user_id)
             const res = await mysql.conn.query('SELECT * FROM tokens WHERE user_id = ?', user_id)
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
+
+    async deleteByUserId(user_id: string): Promise<Result> {
+        try {
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('DELETE FROM tokens WHERE user_id = ?', user_id)
             return Promise.resolve({ success: true, data: res[0] })
         } catch (error) {
             console.error(error)

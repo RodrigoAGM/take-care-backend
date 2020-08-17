@@ -24,7 +24,7 @@ export async function handleGetDiagnostics(req: Request, res: Response) {
             let levelObj = level.data as [Level]
             let frequencyObj = frequency.data as [Frequency]
 
-            if (levelObj[0] != undefined && frequencyObj[0] != undefined) {
+            if (levelObj[0] && frequencyObj[0]) {
                 delete diagnosticsList[index].frequency_id
                 delete diagnosticsList[index].level_id
                 diagnosticsList[index].level = levelObj[0]
@@ -53,7 +53,7 @@ export async function handleAddDiagnostics(req: Request, res: Response) {
         let diagnostic: Diagnostic
         let data
 
-        if (levelObj[0] != undefined) {
+        if (levelObj[0]) {
             const frequencyRes = await frequencies.add(frequency)
 
             diagnostic = {
@@ -97,7 +97,7 @@ export async function handleDeleteDiagnostics(req: Request, res: Response) {
 
         const diagnostic = diagnosticRes.data as [Diagnostic]
         let data
-        if (diagnostic[0] != undefined) {
+        if (diagnostic[0]) {
             await frequencies.delete(diagnostic[0].frequency_id.toString())
             data = await diagnostics.delete(id);
         } else {
@@ -120,7 +120,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
         let diagnosticsObj = data.data as [Diagnostic]
         console.log(diagnosticsObj)
 
-        if (diagnosticsObj == undefined) {
+        if (!diagnosticsObj) {
 
             res.status(204)
             data = {
@@ -135,7 +135,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
             let levelObj = level.data as [Level]
             let frequencyObj = frequency.data as [Frequency]
 
-            if (levelObj[0] != undefined && frequencyObj[0] != undefined) {
+            if (levelObj[0] && frequencyObj[0]) {
                 delete diagnosticsObj[0].frequency_id
                 delete diagnosticsObj[0].level_id
                 diagnosticsObj[0].level = levelObj[0]
@@ -159,7 +159,7 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
         const diagnostic: Diagnostic = req.body
         let data
 
-        if (diagnostic.frequency_id != undefined || diagnostic.level_id != undefined || diagnostic.user_id != undefined) {
+        if (diagnostic.frequency_id || diagnostic.level_id || diagnostic.user_id) {
             data = {
                 success: false,
                 data: 'Cannot update foreign keys for diagnostic, only description or date.'
@@ -169,7 +169,7 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
             data = await diagnostics.update(id, diagnostic);
             const info = data.data as ResultSetHeader
 
-            if (!info.changedRows && info.changedRows == 0) {
+            if (info.changedRows && info.changedRows == 0) {
                 data = {
                     success: false,
                     data: 'Something went wrong, diagnostic not updated'

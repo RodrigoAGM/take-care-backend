@@ -7,4 +7,5 @@ export interface Tokens {
     getById(id: string): Promise<Result>
     update(id: string, object: Object): Promise<Result>
     getByUserId(user_id: string): Promise<Result>
+    deleteByUserId(user_id: string): Promise<Result>
 }
