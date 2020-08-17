@@ -61,6 +61,10 @@ export class Users implements UserInterface {
             if(user.password != undefined){
                 user.password = bcrypt.hashSync(user.password, 10)
             }
+
+            if(user.rol_id){
+                return Promise.reject({ success: false, error:'User role cannot be updated' });
+            }
             
             const res = await mysql.conn.query('UPDATE users set ? WHERE id = ?', [user, id])
             return Promise.resolve({ success: true, data: res[0] })

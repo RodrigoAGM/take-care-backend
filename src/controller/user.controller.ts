@@ -1,7 +1,8 @@
 import { Users } from "../service/user.service";
 import { Request, Response } from 'express'
 import { User, Roles } from "../model/user";
-import { TokenRequest } from "../model/request";
+import { TokenRequest, Payload } from "../model/request";
+import { Token } from "../model/token";
 
 const users = new Users()
 
@@ -26,7 +27,6 @@ export async function handleAddUsers(req: Request, res: Response) {
     try {
         let { role , user} = req.body
         user = user as User
-        console.log(role)
 
         if(role){
             if(role.toUpperCase() == "ADMIN") user.rol_id = Roles.ADMIN
@@ -148,12 +148,48 @@ export async function handleUpdateUsersByUsername(req: Request, res: Response) {
 export async function handleRegisterUsers(req: Request, res: Response) {
     try {
         const user: User = req.body
-        const data = await users.add(user);
+        const data = await users.register(user);
 
         //Handle hide password
         let usersObj: User = data.data as User
         delete usersObj.password
         delete usersObj.rol_id
+
+        res.send(data)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+export async function handleGetUserWithToken(req: Request, res: Response) {
+    try {
+        const tokenRequest = req as TokenRequest
+        const payload:Payload = tokenRequest.user
+
+        let data = await users.getById(payload.id.toString());
+
+        //Handle hide password
+        let usersList: User[] = data.data as User[]
+
+        usersList.forEach((user, i) => {
+            delete user.password
+            delete user.rol_id
+        })
+        data.data = usersList[0]
+
+        res.send(data)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+export async function handleUpdateUserWithToken(req: Request, res: Response) {
+    try {
+        const tokenRequest = req as TokenRequest
+        const payload:Payload = tokenRequest.user
+        const user: User = req.body
+
+        let data = await users.update(payload.id.toString(), user);
 
         res.send(data)
     } catch (error) {
