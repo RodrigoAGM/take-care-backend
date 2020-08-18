@@ -72,4 +72,26 @@ export class Diagnostics implements DiagnosticInterface {
             return Promise.reject({ success: false, error });
         }
     }
+
+    async getByUserId(user_id:string): Promise<Result> {
+        try {
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('SELECT * FROM diagnostics WHERE user_id = ?', user_id)
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
+
+    async getByLevelId(level_id:string): Promise<Result>{
+        try {
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('SELECT * FROM diagnostics WHERE level_id = ?', level_id)
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
 }

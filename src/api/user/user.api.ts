@@ -3,8 +3,8 @@ import {
     handleRegisterUsers,
     handleGetUserWithToken,
     handleUpdateUserWithToken
-} from '../controller/user.controller';
-import { authenticateToken } from '../middleware/jwt.middleware';
+} from '../../controller/user.controller';
+import { authenticateToken } from '../../middleware/jwt.middleware';
 
 const router = Router()
 

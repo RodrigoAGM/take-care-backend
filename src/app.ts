@@ -1,13 +1,16 @@
 import {config as envConfig} from 'dotenv'
 import express, { Application } from 'express'
-import { users } from './api/user.api'
-import { users as adminUsers } from './api/user.admin.api'
-import { levels } from './api/level.api'
+import { users } from './api/user/user.api'
+import { levels } from './api/user/level.api'
 import { json } from 'body-parser'
-import { frequencies } from './api/frequency.api'
-import { advices } from './api/advice.api'
-import { diagnostics } from './api/diagnostic.api'
+import { advices } from './api/user/advice.api'
+import { diagnostics } from './api/user/diagnostic.api'
 import { login } from './api/login.api'
+import { users as adminUsers } from './api/admin/user.admin.api'
+import { advices as adminAdvices } from './api/admin/advice.admin.api'
+import { frequencies as adminFrequencies } from './api/admin/frequency.admin.api'
+import { diagnostics as adminDiagnostics} from './api/admin/diagnostic.admin.api'
+import { levels as adminLevels} from './api/admin/level.admin.api'
 
 export class App {
 
@@ -29,12 +32,21 @@ export class App {
         this.app.get('/', json(), function (req, res) {
             res.send('Hello World!');
         });
+
+        //User and Admin routes
         this.app.use('/users', json(), users)
-        this.app.use('/admin/users', json(), adminUsers)
-        this.app.use('/levels', json(), levels)
-        this.app.use('/frequencies', json(), frequencies)
         this.app.use('/advices', json(), advices)
         this.app.use('/diagnostics', json(), diagnostics)
+        this.app.use('/levels', json(), levels)
+
+        //Admin only routes
+        this.app.use('/admin/users', json(), adminUsers)
+        this.app.use('/admin/advices', json(), adminAdvices)
+        this.app.use('/admin/frequencies', json(), adminFrequencies)
+        this.app.use('/admin/diagnostics', json(), adminDiagnostics)
+        this.app.use('/admin/levels', json(), adminLevels)
+
+        //General Routes
         this.app.use('/auth', json(), login)
     }
 

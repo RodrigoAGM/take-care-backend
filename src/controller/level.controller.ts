@@ -1,6 +1,8 @@
 import { Levels } from "../service/level.service";
 import { Request, Response } from 'express'
 import { Level } from "../model/level";
+import { Frequencies } from "../interface/frequency.interface";
+import { Frequency } from "../model/frequency";
 
 const levels = new Levels()
 
@@ -67,9 +69,18 @@ export async function handleUpdateLevels(req: Request, res: Response) {
 export async function handleGetLevelsByFrequency(req: Request, res: Response) {
     try {
         const frequency = Number.parseInt(req.params.frequency)
-        const data = await levels.getByFrequencyValue(frequency)
+        let data = await levels.getByFrequencyValue(frequency)
 
-        res.json({ success: data.success, data: data.data })
+        const frequencyRes = data.data as [Frequency]
+
+        if (!frequencyRes[0]) {
+            data = {
+                success: false,
+                data: 'No level found for this frequency'
+            }
+        }
+
+        res.send(data)
     } catch (error) {
         res.status(500).send(error)
     }

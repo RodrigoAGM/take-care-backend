@@ -6,6 +6,7 @@ import { Frequencies } from "../service/frequency.service";
 import { Levels } from "../service/level.service";
 import { Level } from "../model/level";
 import { ResultSetHeader } from "../model/result";
+import { TokenRequest } from "../model/request";
 
 const diagnostics = new Diagnostics()
 const frequencies = new Frequencies()
@@ -48,12 +49,12 @@ export async function handleAddDiagnostics(req: Request, res: Response) {
 
         const frequencyObj: Frequency = frequency
         const levelRes = await levels.getByFrequencyValue(frequencyObj.heart_rate)
-        const levelObj = levelRes.data as [Level]
 
         let diagnostic: Diagnostic
         let data
 
-        if (levelObj[0]) {
+        if (levelRes.success) {
+            const levelObj = levelRes.data as [Level]
             const frequencyRes = await frequencies.add(frequency)
 
             diagnostic = {
@@ -115,14 +116,12 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
     try {
         const id = req.params.id
         let data = await diagnostics.getById(id);
-        console.log(data)
+
         //Handle get objects 
         let diagnosticsObj = data.data as [Diagnostic]
-        console.log(diagnosticsObj)
 
         if (!diagnosticsObj) {
 
-            res.status(204)
             data = {
                 success: false,
                 data: 'No diagnostic found with the specified id'
@@ -179,6 +178,169 @@ export async function handleUpdateDiagnostics(req: Request, res: Response) {
         }
 
         res.send(data)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+
+export async function handleGetDiagnosticsByUserId(req: Request, res: Response) {
+    try {
+        const id = req.params.id
+        let data = await diagnostics.getByUserId(id);
+
+        //Handle get objects 
+        let diagnosticsList: Diagnostic[] = data.data as Diagnostic[]
+
+        if (diagnosticsList.length == 0) {
+            data = {
+                success: false,
+                data: 'No diagnostic found with the specified id'
+            }
+        } else {
+            for (let index = 0; index < diagnosticsList.length; index++) {
+                let level = await levels.getById(diagnosticsList[index].level_id.toString())
+                let frequency = await frequencies.getById(diagnosticsList[index].frequency_id.toString())
+
+                let levelObj = level.data as [Level]
+                let frequencyObj = frequency.data as [Frequency]
+
+                if (levelObj[0] && frequencyObj[0]) {
+                    delete diagnosticsList[index].frequency_id
+                    delete diagnosticsList[index].level_id
+                    diagnosticsList[index].level = levelObj[0]
+                    diagnosticsList[index].frequency = frequencyObj[0]
+                }
+                else {
+                    res.status(206)
+                }
+            }
+        }
+
+        res.send(data)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
+}
+
+export async function handleGetDiagnosticsByLevelId(req: Request, res: Response) {
+    try {
+        const id = req.params.id
+        let data = await diagnostics.getByLevelId(id);
+
+        //Handle get objects 
+        let diagnosticsList: Diagnostic[] = data.data as Diagnostic[]
+
+        if (diagnosticsList.length == 0) {
+            data = {
+                success: false,
+                data: 'No diagnostics found with the specified level'
+            }
+        } else {
+            for (let index = 0; index < diagnosticsList.length; index++) {
+                let level = await levels.getById(diagnosticsList[index].level_id.toString())
+                let frequency = await frequencies.getById(diagnosticsList[index].frequency_id.toString())
+
+                let levelObj = level.data as [Level]
+                let frequencyObj = frequency.data as [Frequency]
+
+                if (levelObj[0] && frequencyObj[0]) {
+                    delete diagnosticsList[index].frequency_id
+                    delete diagnosticsList[index].level_id
+                    diagnosticsList[index].level = levelObj[0]
+                    diagnosticsList[index].frequency = frequencyObj[0]
+                }
+                else {
+                    res.status(206)
+                }
+            }
+        }
+
+        res.send(data)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
+}
+
+export async function handleGetDiagnosticsWithToken(req: Request, res: Response) {
+    try {
+        const tokenRequest = req as TokenRequest
+        const payload = tokenRequest.user
+
+        let data = await diagnostics.getByUserId(payload.id.toString());
+
+        //Handle get objects 
+        let diagnosticsList: Diagnostic[] = data.data as Diagnostic[]
+
+        if (diagnosticsList.length == 0) {
+            data = {
+                success: false,
+                data: 'No diagnostics found for user.'
+            }
+        } else {
+            for (let index = 0; index < diagnosticsList.length; index++) {
+                let level = await levels.getById(diagnosticsList[index].level_id.toString())
+                let frequency = await frequencies.getById(diagnosticsList[index].frequency_id.toString())
+
+                let levelObj = level.data as [Level]
+                let frequencyObj = frequency.data as [Frequency]
+
+                if (levelObj[0] && frequencyObj[0]) {
+                    delete diagnosticsList[index].frequency_id
+                    delete diagnosticsList[index].level_id
+                    diagnosticsList[index].level = levelObj[0]
+                    diagnosticsList[index].frequency = frequencyObj[0]
+                }
+                else {
+                    res.status(206)
+                }
+            }
+        }
+
+        res.send(data)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
+}
+
+export async function handleAddDiagnosticsWithToken(req: Request, res: Response) {
+    try {
+        const tokenRequest = req as TokenRequest
+        const user_id = tokenRequest.user.id
+
+        const { frequency, date, description } = req.body
+        const frequencyObj: Frequency = frequency
+        const levelRes = await levels.getByFrequencyValue(frequencyObj.heart_rate)
+        const levelObj = levelRes.data as [Level]
+
+        let diagnostic: Diagnostic
+        let data
+
+        if (levelObj[0]) {
+            const frequencyRes = await frequencies.add(frequency)
+
+            diagnostic = {
+                date: date,
+                description: description,
+                user_id: user_id,
+                frequency_id: Number.parseInt(frequencyRes.id),
+                level_id: levelObj[0].id || -1
+            }
+            data = await diagnostics.add(diagnostic);
+
+        } else {
+            data = {
+                success: false,
+                data: 'Something went wrong.'
+            }
+            res.status(400)
+        }
+
+        res.send(data)
+
     } catch (error) {
         res.status(500).send(error)
     }
