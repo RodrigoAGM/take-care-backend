@@ -1,5 +1,5 @@
 import { createPool, Pool } from 'mysql2/promise';
-import { dbConfig } from '../../config/db.config';
+import { config } from 'dotenv'
 
 export class MySql {
 
@@ -7,12 +7,15 @@ export class MySql {
     conn: Pool
 
     constructor() {
+
+        config()
+        
         try {
             this.conn = createPool({
-                host: dbConfig.HOST,
-                user: dbConfig.USER,
-                password: dbConfig.PASSWORD,
-                database: dbConfig.DB
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
             })
             console.log('Database connected')
         } catch (error) {

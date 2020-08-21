@@ -184,12 +184,12 @@ export async function handleRequestRecoverPassword(req: Request, res: Response) 
                 let user = userlist[0]
 
                 let transporter = mailer.createTransport({
-                    host: process.env.MAIL_HOST,
-                    port: Number(process.env.MAIL_PORT),
+                    host: process.env.MAILGUN_SMTP_SERVER,
+                    port: Number(process.env.MAILGUN_SMTP_PORT),
                     secure: false,
                     auth: {
-                        user: process.env.MAIL_USERNAME,
-                        pass: process.env.MAIL_PASSWORD
+                        user: process.env.MAILGUN_SMTP_LOGIN,
+                        pass: process.env.MAILGUN_SMTP_PASSWORD
                     }
                 });
 
