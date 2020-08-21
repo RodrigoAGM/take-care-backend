@@ -107,6 +107,17 @@ export class Users implements UserInterface {
         }
     }
 
+    async getByEmail(mail: string): Promise<Result> {
+        try {
+            const mysql = MySql.getConnection()
+            const res = await mysql.conn.query('SELECT * FROM users WHERE mail = ?', mail)
+            return Promise.resolve({ success: true, data: res[0] })
+        } catch (error) {
+            console.error(error)
+            return Promise.reject({ success: false, error });
+        }
+    }
+
     async updateByUsername(username: string, user: User): Promise<Result> {
         try {
             const mysql = MySql.getConnection()

@@ -7,4 +7,5 @@ export interface Users extends Base{
     getByUsername(username:string): Promise<Result>
     updateByUsername(username:string, user: User): Promise<Result>
     register(user: User): Promise<ResultId>
+    getByEmail(mail:string): Promise<Result>
 }
