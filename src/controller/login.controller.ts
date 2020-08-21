@@ -251,63 +251,64 @@ export async function handleRequestRecoverPassword(req: Request, res: Response) 
 
     } catch (error) {
         console.error(error)
-        res.status(500).send('Invalid refresh token sent for user.')
+        res.status(500).send('Something went wrong.')
     }
 }
 
 export async function handleRecoverPassword(req: Request, res: Response) {
 
     try {
-        const { mail } = req.body
+        const { mail, password, token } = req.body
         const userRes = await users.getByEmail(mail)
         let data
 
         if (userRes.success) {
-            let user = userRes.data as [User]
+            const userlist = userRes.data as [User]
 
-            if (user[0]) {
+            if (userlist[0]) {
 
-                let transporter = mailer.createTransport({
-                    host: process.env.MAIL_HOST,
-                    port: Number(process.env.MAIL_PORT),
-                    secure: false,
-                    auth: {
-                        user: process.env.MAIL_USERNAME,
-                        pass: process.env.MAIL_PASSWORD
+                let user = userlist[0]
+
+                if(bcrypt.compareSync(token, user.password) && user.id){	
+
+                    const userCopy = { 
+                        id: user.id
                     }
-                });
+    
+                    delete user.id
+                    delete user.rol_id
+                    user.password = password
 
-                var validationKey = crypto.randomBytes(10)
-
-                let info = await transporter.sendMail({
-                    from: 'rodgm18@gmail.com', // sender address
-                    to: user[0].mail, // list of receivers
-                    subject: "Take Care - Recover Password", // Subject line
-                    html: "<p>Hola <b>" + user[0].username + "</b>!</p><p>Si recibiste este correo es porque " +
-                        "solicitaste una clave de recuperación de contraseña.</p><p>Para poder cambiar tu contraseña deberás " +
-                        "ingresar el siguiente código en la app junto con tu nueva contraseña para que el cambio sea válido:</p>" +
-                        "<p><b>codigo</b></p><p>Si no realizaste esta solicitud verifica las credenciales de tu cuenta o solicita " +
-                        "un cambio de contraseña por seguridad.</p><p>Atte. Equipo de soporte de Take Care.</p>", // html body
-                });
-
-
-
+                    await users.update(userCopy.id.toString(), user) 
+                    
+                    data = {
+                        success: true,
+                        message: 'Password successfully changed.'
+                    }
+            
+                }else{
+                    res.status(400)
+                    data = {
+                        success: false,
+                        error: 'The inserted recover token is invalid.'
+                    }
+                }
             } else {
                 data = {
                     success: false,
-                    error: 'No user was found with the inserted email. Create a new account to start using the app.'
+                    error: 'Something went wrong.'
                 }
             }
         } else {
             data = {
                 success: false,
-                error: 'No user was found with the inserted email. Create a new account to start using the app.'
+                error: 'Something went wrong.'
             }
         }
 
-
+        res.send(data)
     } catch (error) {
         console.error(error)
-        res.status(500).send('Invalid refresh token sent for user.')
+        res.status(500).send('Something went wrong.')
     }
 }
