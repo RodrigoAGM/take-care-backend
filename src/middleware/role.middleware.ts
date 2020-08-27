@@ -7,7 +7,7 @@ export function authenticateRole(role: number) {
         const tokenRequest = req as TokenRequest
 
         if (tokenRequest.user.role != role) {
-            return res.status(401).send('You do not have the permission to get this data.')
+            return res.status(403).send('You do not have the permission to get this data.')
         }
 
         next()

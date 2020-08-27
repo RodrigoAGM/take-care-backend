@@ -20,7 +20,7 @@ export async function authenticateToken(req: any, res: Response, next: NextFunct
             
         } catch (error) {
             console.log(error)
-            return res.status(403).send('Invalid token in authorization header')
+            return res.status(401).send('Invalid token in authorization header')
         }
         
     }
