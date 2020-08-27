@@ -75,7 +75,7 @@ export async function handleLogin(req: Request, res: Response) {
                 }
             }
         } else {
-            res.status(500)
+            res.status(400)
             data = {
                 success: false,
                 error: 'Wrong username or password'
