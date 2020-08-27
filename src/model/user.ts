@@ -10,7 +10,8 @@ export interface User {
     birthday: string,
     height?: number,
     weight?: number,
-    rol_id?: number
+    rol_id?: number,
+    image_url?: string,
 }
 
 const Roles = {
