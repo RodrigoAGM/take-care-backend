@@ -294,12 +294,14 @@ export async function handleRecoverPassword(req: Request, res: Response) {
                     }
                 }
             } else {
+                res.status(500)
                 data = {
                     success: false,
                     error: 'Something went wrong.'
                 }
             }
         } else {
+            res.status(500)
             data = {
                 success: false,
                 error: 'Something went wrong.'
