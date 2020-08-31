@@ -124,7 +124,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
 
             data = {
                 success: false,
-                data: 'No diagnostic found with the specified id'
+                data: [],
             }
 
         } else {
@@ -141,7 +141,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
                 diagnosticsObj[0].frequency = frequencyObj[0]
             }
             else {
-                res.status(206)
+                res.status(400)
             }
         }
 
