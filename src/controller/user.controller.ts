@@ -157,7 +157,12 @@ export async function handleRegisterUsers(req: Request, res: Response) {
 
         res.send(data)
     } catch (error) {
-        res.status(500).send(error)
+        if(error.error != null && Number(error.error.errno) == 1062){
+            res.status(400)
+        }else{
+            res.status(500)
+        }
+        res.send(error)
     }
 }
 
