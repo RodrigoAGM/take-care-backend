@@ -32,7 +32,7 @@ export async function handleGetDiagnostics(req: Request, res: Response) {
                 diagnosticsList[index].frequency = frequencyObj[0]
             }
             else {
-                res.status(206)
+                res.status(500)
             }
         }
 
@@ -103,7 +103,7 @@ export async function handleDeleteDiagnostics(req: Request, res: Response) {
             data = await diagnostics.delete(id);
         } else {
             data = 'No Diagnostic found with this id.'
-            res.status(206)
+            res.status(400)
         }
 
         res.send(data)
@@ -123,7 +123,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
         if (!diagnosticsObj) {
 
             data = {
-                success: false,
+                success: true,
                 data: [],
             }
 
@@ -141,7 +141,7 @@ export async function handleGetDiagnosticsById(req: Request, res: Response) {
                 diagnosticsObj[0].frequency = frequencyObj[0]
             }
             else {
-                res.status(400)
+                res.status(500)
             }
         }
 
@@ -194,8 +194,8 @@ export async function handleGetDiagnosticsByUserId(req: Request, res: Response) 
 
         if (diagnosticsList.length == 0) {
             data = {
-                success: false,
-                data: 'No diagnostic found with the specified id'
+                success: true,
+                data: []
             }
         } else {
             for (let index = 0; index < diagnosticsList.length; index++) {
@@ -212,7 +212,11 @@ export async function handleGetDiagnosticsByUserId(req: Request, res: Response) 
                     diagnosticsList[index].frequency = frequencyObj[0]
                 }
                 else {
-                    res.status(206)
+                    res.status(500)
+                    data = {
+                        success: false,
+                        data: []
+                    }
                 }
             }
         }
@@ -234,8 +238,8 @@ export async function handleGetDiagnosticsByLevelId(req: Request, res: Response)
 
         if (diagnosticsList.length == 0) {
             data = {
-                success: false,
-                data: 'No diagnostics found with the specified level'
+                success: true,
+                data: []
             }
         } else {
             for (let index = 0; index < diagnosticsList.length; index++) {
@@ -252,7 +256,11 @@ export async function handleGetDiagnosticsByLevelId(req: Request, res: Response)
                     diagnosticsList[index].frequency = frequencyObj[0]
                 }
                 else {
-                    res.status(206)
+                    res.status(500)
+                    data = {
+                        success: false,
+                        data: []
+                    }
                 }
             }
         }
@@ -276,8 +284,8 @@ export async function handleGetDiagnosticsWithToken(req: Request, res: Response)
 
         if (diagnosticsList.length == 0) {
             data = {
-                success: false,
-                data: 'No diagnostics found for user.'
+                success: true,
+                data: []
             }
         } else {
             for (let index = 0; index < diagnosticsList.length; index++) {
@@ -294,7 +302,11 @@ export async function handleGetDiagnosticsWithToken(req: Request, res: Response)
                     diagnosticsList[index].frequency = frequencyObj[0]
                 }
                 else {
-                    res.status(206)
+                    res.status(500)
+                    data = {
+                        success: false,
+                        data: []
+                    }
                 }
             }
         }
