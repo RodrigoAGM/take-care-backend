@@ -106,3 +106,5 @@ dist
 build/
 
 /config/db.config.ts
+
+takecareDB.txt
