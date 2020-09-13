@@ -10,8 +10,10 @@ import { Token } from '../model/token'
 import { Payload, TokenRequest } from '../model/request'
 import { ResultSetHeader } from '../model/result'
 import * as crypto from 'crypto'
+import { Psychiatrists } from '../service/psychiatrist.service'
 
 const users = new Users()
+const psychiatrists = new Psychiatrists()
 const tokens = new Tokens()
 config()
 
@@ -89,6 +91,70 @@ export async function handleLogin(req: Request, res: Response) {
     }
 }
 
+export async function handlePsychiatristLogin(req: Request, res: Response) {
+    try {
+        const { username, password } = req.body
+        const psychiatristRes = await psychiatrists.getByUsername(username)
+        const psychiatrist = psychiatristRes.data as [User]
+        let data
+
+        if (psychiatrist[0] != undefined && bcrypt.compareSync(password, psychiatrist[0].password)) {
+
+            const tokenPsychiatrist = {
+                id: psychiatrist[0].id,
+                username: psychiatrist[0].username,
+                mail: psychiatrist[0].mail,
+                role: psychiatrist[0].rol_id
+            }
+
+            delete psychiatrist[0].password
+            delete psychiatrist[0].rol_id
+
+            //Handle delete user password for response
+            if (process.env.ACCESS_TOKEN_SECRET != undefined && tokenPsychiatrist.id != undefined) {
+                const accessToken = jwt.sign(tokenPsychiatrist, process.env.ACCESS_TOKEN_SECRET)
+
+                //Handle login with existing refresh token on database
+                const tokenRes = await tokens.getByUserId(tokenPsychiatrist.id.toString())
+                const tokenObj = tokenRes.data as [Token]
+
+                const TokenObj: Token = {
+                    token: accessToken,
+                    user_id: tokenPsychiatrist.id
+                }
+
+                if (tokenObj[0] != undefined) {
+                    await tokens.update(tokenPsychiatrist.id.toString(), TokenObj)
+                } else {
+                    await tokens.add(TokenObj)
+                }
+
+                data = {
+                    success: true,
+                    user: psychiatrist[0],
+                    token: accessToken
+                }
+            } else {
+                res.status(500)
+                data = {
+                    success: false,
+                    error: 'Something went wrong authenticating psychiatrist'
+                }
+            }
+        } else {
+            res.status(400)
+            data = {
+                success: false,
+                error: 'Wrong username or password'
+            }
+        }
+
+        res.send(data)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error)
+    }
+}
 
 export async function handleLogout(req: Request, res: Response) {
     try {
