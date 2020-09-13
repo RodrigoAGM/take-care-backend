@@ -113,11 +113,11 @@ CREATE TABLE `psychiatrists` (
   UNIQUE KEY `mail_UNIQUE` (`mail`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   KEY `psychiatrist_rol_idx` (`rol_id`),
-  --KEY `psychiatrist_department_idx` (`department_id`),
-  --KEY `psychiatrist_district_idx` (`district_id`),
-  --KEY `psychiatrist_province_idx` (`provice_id`),
-  --CONSTRAINT `psychiatrist_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  --CONSTRAINT `psychiatrist_district` FOREIGN KEY (`district_id`) REFERENCES `district` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  --CONSTRAINT `psychiatrist_province` FOREIGN KEY (`provice_id`) REFERENCES `province` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  -- KEY `psychiatrist_department_idx` (`department_id`),
+  -- KEY `psychiatrist_district_idx` (`district_id`),
+  -- KEY `psychiatrist_province_idx` (`provice_id`),
+  -- CONSTRAINT `psychiatrist_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  -- CONSTRAINT `psychiatrist_district` FOREIGN KEY (`district_id`) REFERENCES `district` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  -- CONSTRAINT `psychiatrist_province` FOREIGN KEY (`provice_id`) REFERENCES `province` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `psychiatrist_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
