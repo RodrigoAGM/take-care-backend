@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { User, Roles } from "../model/user";
 import { TokenRequest, Payload } from "../model/request";
 import { Token } from "../model/token";
+import * as bcrypt from 'bcrypt'
 
 const users = new Users()
 
@@ -199,5 +200,68 @@ export async function handleUpdateUserWithToken(req: Request, res: Response) {
         res.send(data)
     } catch (error) {
         res.status(500).send(error)
+    }
+}
+
+export async function handleUpdatePasswordWithToken(req: Request, res: Response) {
+
+    try {
+        const tokenRequest = req as TokenRequest
+        const payload:Payload = tokenRequest.user
+        const { oldPassword, password } = req.body
+
+        const userRes = await users.getById(payload.id.toString());
+        let data
+
+        if (userRes.success) {
+            const userlist = userRes.data as [User]
+
+            if (userlist[0]) {
+
+                let user = userlist[0]
+
+                if(bcrypt.compareSync(oldPassword, user.password) && user.id){	
+
+                    const userCopy = { 
+                        id: user.id
+                    }
+    
+                    delete user.id
+                    delete user.rol_id
+                    user.password = password
+
+                    await users.update(userCopy.id.toString(), user) 
+                    
+                    data = {
+                        success: true,
+                        message: 'Password successfully changed.'
+                    }
+            
+                }else{
+                    res.status(400)
+                    data = {
+                        success: false,
+                        error: 'The inserted old password is incorrect.'
+                    }
+                }
+            } else {
+                res.status(500)
+                data = {
+                    success: false,
+                    error: 'Something went wrong.'
+                }
+            }
+        } else {
+            res.status(500)
+            data = {
+                success: false,
+                error: 'Something went wrong.'
+            }
+        }
+
+        res.send(data)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Something went wrong.')
     }
 }

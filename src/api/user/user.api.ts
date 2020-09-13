@@ -2,7 +2,8 @@ import { Router } from 'express'
 import {
     handleRegisterUsers,
     handleGetUserWithToken,
-    handleUpdateUserWithToken
+    handleUpdateUserWithToken,
+    handleUpdatePasswordWithToken
 } from '../../controller/user.controller';
 import { authenticateToken } from '../../middleware/jwt.middleware';
 
@@ -12,5 +13,6 @@ const router = Router()
 router.post('/register', handleRegisterUsers)
 router.get('/get', authenticateToken, handleGetUserWithToken)
 router.put('/update', authenticateToken, handleUpdateUserWithToken)
+router.put('/update/password', authenticateToken, handleUpdatePasswordWithToken)
 
 export { router as users }
