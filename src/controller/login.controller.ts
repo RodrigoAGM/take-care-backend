@@ -114,21 +114,6 @@ export async function handlePsychiatristLogin(req: Request, res: Response) {
             if (process.env.ACCESS_TOKEN_SECRET != undefined && tokenPsychiatrist.id != undefined) {
                 const accessToken = jwt.sign(tokenPsychiatrist, process.env.ACCESS_TOKEN_SECRET)
 
-                //Handle login with existing refresh token on database
-                const tokenRes = await tokens.getByUserId(tokenPsychiatrist.id.toString())
-                const tokenObj = tokenRes.data as [Token]
-
-                const TokenObj: Token = {
-                    token: accessToken,
-                    user_id: tokenPsychiatrist.id
-                }
-
-                if (tokenObj[0] != undefined) {
-                    await tokens.update(tokenPsychiatrist.id.toString(), TokenObj)
-                } else {
-                    await tokens.add(TokenObj)
-                }
-
                 data = {
                     success: true,
                     user: psychiatrist[0],
