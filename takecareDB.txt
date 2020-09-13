@@ -1,0 +1,123 @@
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(300) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `token_UNIQUE` (`token`),
+  KEY `user_id_idx` (`user_id`),
+  CONSTRAINT `token_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `age` int(11) DEFAULT NULL,
+  `gender` tinyint(4) DEFAULT NULL,
+  `mail` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `birthday` varchar(15) DEFAULT NULL,
+  `height` decimal(10,0) DEFAULT NULL,
+  `weight` decimal(10,0) DEFAULT NULL,
+  `rol_id` int(11) NOT NULL,
+  `image_url` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userId_UNIQUE` (`id`),
+  UNIQUE KEY `userUsername_UNIQUE` (`username`),
+  UNIQUE KEY `mail_UNIQUE` (`mail`),
+  KEY `rol_id_idx` (`rol_id`),
+  CONSTRAINT `rol_id` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `advices` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `type` varchar(45) NOT NULL,
+  `archive_url` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `frequencies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `heart_rate` decimal(10,0) NOT NULL,
+  `date` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `frequencyId_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `levels` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(45) DEFAULT NULL,
+  `name` varchar(45) NOT NULL,
+  `min_frequency` decimal(10,0) NOT NULL,
+  `max_frequency` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `levelId_UNIQUE` (`id`),
+  UNIQUE KEY `levelName_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `diagnostics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `level_id` int(11) NOT NULL,
+  `frequency_id` int(11) NOT NULL,
+  `date` varchar(45) NOT NULL,
+  `description` varchar(150) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `frequencyId_idx` (`frequency_id`),
+  KEY `user_id_idx` (`user_id`),
+  KEY `level_id_idx` (`level_id`),
+  CONSTRAINT `frequency_id` FOREIGN KEY (`frequency_id`) REFERENCES `frequencies` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `level_id` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `psychiatrists` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `second_last_name` varchar(45) NOT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  `gender` tinyint(4) DEFAULT NULL,
+  `birthday` varchar(15) DEFAULT NULL,
+  `mail` varchar(100) NOT NULL,
+  `status` varchar(45) DEFAULT NULL,
+  `username` varchar(30) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `image_url` varchar(45) DEFAULT NULL,
+  `department_id` int(11) NOT NULL,
+  `provice_id` int(11) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `rol_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `mail_UNIQUE` (`mail`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  KEY `psychiatrist_rol_idx` (`rol_id`),
+  --KEY `psychiatrist_department_idx` (`department_id`),
+  --KEY `psychiatrist_district_idx` (`district_id`),
+  --KEY `psychiatrist_province_idx` (`provice_id`),
+  --CONSTRAINT `psychiatrist_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  --CONSTRAINT `psychiatrist_district` FOREIGN KEY (`district_id`) REFERENCES `district` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  --CONSTRAINT `psychiatrist_province` FOREIGN KEY (`provice_id`) REFERENCES `province` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `psychiatrist_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
