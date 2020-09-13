@@ -1,8 +1,8 @@
 import Base from "./base.interface";
 import { Result, ResultId } from "../model/result";
-import { User } from "../model/user";
+import { Psychiatrist } from "../model/psychiatrist";
 
 export interface Psychiatrists extends Base{
     getByUsername(username:string): Promise<Result>
-    register(user: User): Promise<ResultId>
+    register(user: Psychiatrist): Promise<ResultId>
 }

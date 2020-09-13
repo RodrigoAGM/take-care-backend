@@ -1,4 +1,4 @@
-export interface User {
+export interface Psychiatrist {
     id?: number,
     name: string,
     last_name: string,
