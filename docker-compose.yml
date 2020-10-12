@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  api:
+    image: take-care-backend
+    build: .
+    networks:
+      - backend
+    ports:
+        - "3000:3000"
+  
+  web-cli:
+    image: take-care-backend
+    networks:
+      - backend
+    command: sh
+networks:
+    backend:
+      driver: bridge
